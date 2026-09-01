@@ -1,5 +1,5 @@
 {
-  "scan_time": "2026-09-01T05:02:11.032805Z",
+  "scan_time": "2026-09-01T07:08:35.914921+00:00",
   "total_checks": 14,
   "failed": 0,
   "passed": 14,
@@ -9,63 +9,90 @@
       "status": "PASS",
       "severity": "High",
       "finding": "Excessive Application Role Permissions",
-      "evidence": "No unrestricted Action/Resource combination found in attached policies"
+      "resource": "AI-Security-Lab-Vulnerable-Role",
+      "impact": "The application role is protected from unrestricted AWS permissions.",
+      "remediation": "Continue enforcing least-privilege IAM permissions.",
+      "evidence": "No unrestricted Action/Resource combination found in attached policies."
     },
     {
       "id": "IAM-02",
       "status": "PASS",
       "severity": "Critical",
       "finding": "IAM Privilege Escalation Permissions",
-      "evidence": "No unrestricted IAM permissions detected in attached policies"
+      "resource": "AI-Security-Lab-Vulnerable-Role",
+      "impact": "The application role does not contain unrestricted or detected dangerous IAM permissions.",
+      "remediation": "Continue enforcing least-privilege IAM permissions.",
+      "evidence": "No unrestricted IAM permissions detected in attached policies."
     },
     {
       "id": "IAM-03",
       "status": "PASS",
       "severity": "Critical",
       "finding": "Overly Permissive Role Trust Relationship",
-      "evidence": "Trust relationship is restricted"
+      "resource": "AI-Security-Lab-Vulnerable-Role",
+      "impact": "The application role can only be assumed by its intended trusted principal.",
+      "remediation": "Continue restricting the trust relationship to required principals only.",
+      "evidence": "Trust relationship is restricted."
     },
     {
       "id": "S3-01",
       "status": "PASS",
       "severity": "Critical",
       "finding": "Public Application Data",
-      "evidence": "No public Allow statement detected"
+      "resource": "ai-security-lab-data-256148542278",
+      "impact": "Application data is not publicly accessible through the bucket policy.",
+      "remediation": "Continue restricting bucket access to authorized principals.",
+      "evidence": "No public Allow statement detected for ai-security-lab-data-256148542278."
     },
     {
       "id": "S3-02",
       "status": "PASS",
       "severity": "High",
       "finding": "Public Access Protection Disabled",
-      "evidence": "All four Public Access Block controls enabled"
+      "resource": "ai-security-lab-data-256148542278",
+      "impact": "All S3 Public Access Block controls are enabled, reducing the risk of accidental public exposure.",
+      "remediation": "Continue keeping all four Public Access Block controls enabled.",
+      "evidence": "All four Public Access Block controls are enabled for ai-security-lab-data-256148542278."
     },
     {
       "id": "S3-03",
       "status": "PASS",
       "severity": "Medium",
       "finding": "HTTPS Not Enforced",
-      "evidence": "Bucket policy contains aws:SecureTransport condition"
+      "resource": "ai-security-lab-data-256148542278",
+      "impact": "S3 requests are protected against insecure non-HTTPS transport.",
+      "remediation": "Continue enforcing aws:SecureTransport for application bucket access.",
+      "evidence": "Bucket policy for ai-security-lab-data-256148542278 contains an aws:SecureTransport condition."
     },
     {
       "id": "NET-01",
       "status": "PASS",
       "severity": "High",
       "finding": "Internet-Exposed SSH",
-      "evidence": "SSH is not open to the entire IPv4 internet"
+      "resource": "sg-032c8c60db89d1c98",
+      "impact": "SSH is not exposed to the entire IPv4 internet.",
+      "remediation": "Continue restricting administrative access to trusted sources.",
+      "evidence": "Security group sg-032c8c60db89d1c98 does not allow TCP port 22 from 0.0.0.0/0."
     },
     {
       "id": "NET-02",
       "status": "PASS",
       "severity": "High",
       "finding": "Internet-Facing Application Workload",
-      "evidence": "EC2 instance has no public IP"
+      "resource": "i-0f3751859f83badca",
+      "impact": "The EC2 workload does not have a public IP address, reducing its direct internet exposure.",
+      "remediation": "Continue keeping the application workload private and avoid unnecessary public IP assignments.",
+      "evidence": "EC2 instance i-0f3751859f83badca has no public IP. Private IP: 10.0.1.148, subnet: subnet-0009be30133f2bdc4."
     },
     {
       "id": "SEC-01",
       "status": "PASS",
       "severity": "High",
       "finding": "Insecure Application Credential Storage",
-      "evidence": "Application credentials are configured to use AWS Secrets Manager"
+      "resource": "AI-Security-Lab-Dummy-Credential",
+      "impact": "Application credentials are no longer stored directly in the application configuration. Using AWS Secrets Manager reduces the risk of credential exposure.",
+      "remediation": "Store application credentials in AWS Secrets Manager and retrieve them at runtime instead of hardcoding credential values in application configuration files.",
+      "evidence": "Application configuration uses AWS Secrets Manager secret AI-Security-Lab-Dummy-Credential."
     },
     {
       "id": "LOG-01",

@@ -1,5 +1,6 @@
+import argparse
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 
 from scanner.checks.iam_checks import run_iam_checks
 from scanner.checks.s3_checks import run_s3_checks
@@ -70,9 +71,9 @@ def print_report(findings):
     print("=" * 70)
 
 
-def save_report(findings):
+def save_report(findings, output_path):
     report = {
-        "scan_time": datetime.utcnow().isoformat() + "Z",
+        "scan_time": datetime.now(timezone.utc).isoformat(),
         "total_checks": len(findings),
         "failed": sum(
             1
@@ -84,18 +85,32 @@ def save_report(findings):
             for finding in findings
             if finding["status"] == "PASS"
         ),
-        "findings": findings
+        "findings": findings,
     }
 
-    with open("reports/baseline-scan.json", "w") as file:
+    with open(output_path, "w") as file:
         json.dump(report, file, indent=2)
+
+    print(f"\nJSON report saved to: {output_path}")
 
 
 def main():
+    parser = argparse.ArgumentParser(
+        description="AWS Security Hardening Lab scanner"
+    )
+
+    parser.add_argument(
+        "--output",
+        default="reports/final-scan.json",
+        help="Path for the JSON scan report",
+    )
+
+    args = parser.parse_args()
+
     findings = run_all_checks()
 
     print_report(findings)
-    save_report(findings)
+    save_report(findings, args.output)
 
 
 if __name__ == "__main__":
