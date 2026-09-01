@@ -1,0 +1,14 @@
+{
+    "Trail": {
+        "Name": "AI-Security-Lab-Trail",
+        "S3BucketName": "ai-security-lab-cloudtrail-256148542278",
+        "IncludeGlobalServiceEvents": true,
+        "IsMultiRegionTrail": false,
+        "HomeRegion": "us-east-1",
+        "TrailARN": "arn:aws:cloudtrail:us-east-1:256148542278:trail/AI-Security-Lab-Trail",
+        "LogFileValidationEnabled": false,
+        "HasCustomEventSelectors": false,
+        "HasInsightSelectors": false,
+        "IsOrganizationTrail": false
+    }
+}

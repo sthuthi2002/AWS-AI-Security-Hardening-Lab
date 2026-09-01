@@ -1,0 +1,49 @@
+
+======================================================================
+AWS SECURITY HARDENING LAB - BASELINE SCAN
+======================================================================
+
+[FAIL] IAM-01 | High | Excessive Application Role Permissions
+       Evidence: Action=* and Resource=*
+
+[FAIL] IAM-02 | Critical | IAM Privilege Escalation Permissions
+       Evidence: Role contains unrestricted or IAM administrative permissions
+
+[FAIL] IAM-03 | Critical | Overly Permissive Role Trust Relationship
+       Evidence: Principal allows AWS principal *
+
+[FAIL] S3-01 | Critical | Public Application Data
+       Evidence: Bucket policy allows Principal=*
+
+[FAIL] S3-02 | High | Public Access Protection Disabled
+       Evidence: Public Access Block configuration: {'BlockPublicAcls': False, 'IgnorePublicAcls': False, 'BlockPublicPolicy': False, 'RestrictPublicBuckets': False}
+
+[FAIL] S3-03 | Medium | HTTPS Not Enforced
+       Evidence: No aws:SecureTransport condition found
+
+[FAIL] NET-01 | High | Internet-Exposed SSH
+       Evidence: TCP port 22 allows 0.0.0.0/0
+
+[FAIL] NET-02 | High | Internet-Facing Application Workload
+       Evidence: EC2 instance has public IP 100.24.123.232 in subnet subnet-0009be30133f2bdc4
+
+[FAIL] SEC-01 | High | Insecure Application Credential Storage
+       Evidence: Credential material found in insecure-app-config/application.env
+
+[FAIL] LOG-01 | High | Weak CloudTrail Security Configuration
+       Evidence: log file validation disabled; multi-region logging disabled
+
+[FAIL] AI-01 | Critical | Excessive Permissions for AI Workload
+       Evidence: AI workload role AI-Security-Lab-AI-Workload-Role has Action=* and Resource=*
+
+[FAIL] AI-02 | High | Excessive Data Access by AI Workload
+       Evidence: AI workload has S3 access to ai-security-lab-data-256148542278
+
+[FAIL] AI-03 | High | Missing AI Input/Output Security Controls
+       Evidence: Disabled AI security controls: input_validation, prompt_injection_detection, output_validation, sensitive_data_filtering, guardrails_enabled
+
+======================================================================
+Total checks : 13
+Failed       : 13
+Passed       : 0
+======================================================================

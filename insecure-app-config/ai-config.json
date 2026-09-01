@@ -1,0 +1,9 @@
+{
+  "application": "AI-Security-Lab-Demo-App",
+  "model_type": "generative-ai",
+  "input_validation": true,
+  "prompt_injection_detection": true,
+  "output_validation": true,
+  "sensitive_data_filtering": true,
+  "guardrails_enabled": true
+}

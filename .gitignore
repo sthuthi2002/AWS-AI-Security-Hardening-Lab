@@ -1,0 +1,33 @@
+# Python virtual environment
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Environment / secret files
+.env
+.env.*
+*.pem
+*.key
+
+# Local AWS credentials
+.aws/
+credentials
+config
+
+# OS/editor files
+.DS_Store
+*.swp
+*.swo
+
+# Terraform local state
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+
+# Local logs
+*.log

@@ -1,0 +1,118 @@
+{
+  "scan_time": "2026-09-01T05:02:11.032805Z",
+  "total_checks": 14,
+  "failed": 0,
+  "passed": 14,
+  "findings": [
+    {
+      "id": "IAM-01",
+      "status": "PASS",
+      "severity": "High",
+      "finding": "Excessive Application Role Permissions",
+      "evidence": "No unrestricted Action/Resource combination found in attached policies"
+    },
+    {
+      "id": "IAM-02",
+      "status": "PASS",
+      "severity": "Critical",
+      "finding": "IAM Privilege Escalation Permissions",
+      "evidence": "No unrestricted IAM permissions detected in attached policies"
+    },
+    {
+      "id": "IAM-03",
+      "status": "PASS",
+      "severity": "Critical",
+      "finding": "Overly Permissive Role Trust Relationship",
+      "evidence": "Trust relationship is restricted"
+    },
+    {
+      "id": "S3-01",
+      "status": "PASS",
+      "severity": "Critical",
+      "finding": "Public Application Data",
+      "evidence": "No public Allow statement detected"
+    },
+    {
+      "id": "S3-02",
+      "status": "PASS",
+      "severity": "High",
+      "finding": "Public Access Protection Disabled",
+      "evidence": "All four Public Access Block controls enabled"
+    },
+    {
+      "id": "S3-03",
+      "status": "PASS",
+      "severity": "Medium",
+      "finding": "HTTPS Not Enforced",
+      "evidence": "Bucket policy contains aws:SecureTransport condition"
+    },
+    {
+      "id": "NET-01",
+      "status": "PASS",
+      "severity": "High",
+      "finding": "Internet-Exposed SSH",
+      "evidence": "SSH is not open to the entire IPv4 internet"
+    },
+    {
+      "id": "NET-02",
+      "status": "PASS",
+      "severity": "High",
+      "finding": "Internet-Facing Application Workload",
+      "evidence": "EC2 instance has no public IP"
+    },
+    {
+      "id": "SEC-01",
+      "status": "PASS",
+      "severity": "High",
+      "finding": "Insecure Application Credential Storage",
+      "evidence": "Application credentials are configured to use AWS Secrets Manager"
+    },
+    {
+      "id": "LOG-01",
+      "status": "PASS",
+      "severity": "High",
+      "finding": "Weak CloudTrail Security Configuration",
+      "evidence": "Log validation and multi-region logging enabled"
+    },
+    {
+      "id": "AI-01",
+      "status": "PASS",
+      "severity": "Critical",
+      "finding": "Excessive Permissions for Generative-AI Workload",
+      "resource": "AI-Security-Lab-AI-Workload-Role",
+      "impact": "The AI workload is protected against unrestricted AWS permissions.",
+      "remediation": "Continue enforcing least-privilege IAM permissions.",
+      "evidence": "No unrestricted Action/Resource combination found in the AI workload policies."
+    },
+    {
+      "id": "AI-02",
+      "status": "PASS",
+      "severity": "High",
+      "finding": "Excessive Data Access by Generative-AI Workload",
+      "resource": "ai-security-lab-data-256148542278",
+      "impact": "The AI workload is restricted to the minimum required application data.",
+      "remediation": "Maintain least-privilege access to arn:aws:s3:::ai-security-lab-data-256148542278/application-data.txt.",
+      "evidence": "AI workload data access is restricted to the required application resource."
+    },
+    {
+      "id": "AI-03",
+      "status": "PASS",
+      "severity": "High",
+      "finding": "Missing Generative-AI Input/Output Security Controls",
+      "resource": "insecure-app-config/ai-config.json",
+      "impact": "The generative-AI application has configured input/output security protections.",
+      "remediation": "Maintain input validation, prompt-injection detection, output validation, sensitive-data filtering, and guardrail controls.",
+      "evidence": "All required generative-AI input/output security controls are enabled."
+    },
+    {
+      "id": "ENC-01",
+      "status": "PASS",
+      "severity": "High",
+      "finding": "Unencrypted EBS Volume",
+      "resource": "vol-069076c670e9b82fd",
+      "impact": "The workload root volume is protected using encryption at rest.",
+      "remediation": "Maintain encryption for the workload's EBS storage.",
+      "evidence": "EBS volume vol-069076c670e9b82fd attached to instance i-0f3751859f83badca is encrypted."
+    }
+  ]
+}

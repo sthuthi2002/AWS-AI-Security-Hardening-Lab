@@ -1,0 +1,9 @@
+[
+    "i-0f850648a43edfb04",
+    "running",
+    "100.24.123.232",
+    "subnet-0009be30133f2bdc4",
+    "vpc-0403035c1ee10d80c",
+    "arn:aws:iam::256148542278:instance-profile/AI-Security-Lab-Vulnerable-Profile",
+    "sg-032c8c60db89d1c98"
+]

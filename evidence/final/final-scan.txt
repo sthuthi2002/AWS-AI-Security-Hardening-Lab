@@ -1,0 +1,64 @@
+
+======================================================================
+AWS SECURITY HARDENING LAB - SECURITY SCAN
+======================================================================
+
+[PASS] IAM-01 | High | Excessive Application Role Permissions
+       Evidence: No unrestricted Action/Resource combination found in attached policies
+
+[PASS] IAM-02 | Critical | IAM Privilege Escalation Permissions
+       Evidence: No unrestricted IAM permissions detected in attached policies
+
+[PASS] IAM-03 | Critical | Overly Permissive Role Trust Relationship
+       Evidence: Trust relationship is restricted
+
+[PASS] S3-01 | Critical | Public Application Data
+       Evidence: No public Allow statement detected
+
+[PASS] S3-02 | High | Public Access Protection Disabled
+       Evidence: All four Public Access Block controls enabled
+
+[PASS] S3-03 | Medium | HTTPS Not Enforced
+       Evidence: Bucket policy contains aws:SecureTransport condition
+
+[PASS] NET-01 | High | Internet-Exposed SSH
+       Evidence: SSH is not open to the entire IPv4 internet
+
+[PASS] NET-02 | High | Internet-Facing Application Workload
+       Evidence: EC2 instance has no public IP
+
+[PASS] SEC-01 | High | Insecure Application Credential Storage
+       Evidence: Application credentials are configured to use AWS Secrets Manager
+
+[PASS] LOG-01 | High | Weak CloudTrail Security Configuration
+       Evidence: Log validation and multi-region logging enabled
+
+[PASS] AI-01 | Critical | Excessive Permissions for Generative-AI Workload
+       Resource: AI-Security-Lab-AI-Workload-Role
+       Evidence: No unrestricted Action/Resource combination found in the AI workload policies.
+       Impact: The AI workload is protected against unrestricted AWS permissions.
+       Remediation: Continue enforcing least-privilege IAM permissions.
+
+[PASS] AI-02 | High | Excessive Data Access by Generative-AI Workload
+       Resource: ai-security-lab-data-256148542278
+       Evidence: AI workload data access is restricted to the required application resource.
+       Impact: The AI workload is restricted to the minimum required application data.
+       Remediation: Maintain least-privilege access to arn:aws:s3:::ai-security-lab-data-256148542278/application-data.txt.
+
+[PASS] AI-03 | High | Missing Generative-AI Input/Output Security Controls
+       Resource: insecure-app-config/ai-config.json
+       Evidence: All required generative-AI input/output security controls are enabled.
+       Impact: The generative-AI application has configured input/output security protections.
+       Remediation: Maintain input validation, prompt-injection detection, output validation, sensitive-data filtering, and guardrail controls.
+
+[PASS] ENC-01 | High | Unencrypted EBS Volume
+       Resource: vol-069076c670e9b82fd
+       Evidence: EBS volume vol-069076c670e9b82fd attached to instance i-0f3751859f83badca is encrypted.
+       Impact: The workload root volume is protected using encryption at rest.
+       Remediation: Maintain encryption for the workload's EBS storage.
+
+======================================================================
+Total checks : 14
+Failed       : 0
+Passed       : 14
+======================================================================
