@@ -11,6 +11,7 @@ Built for the Seconize Technologies DevSecOps Internship screening assignment.
 - [Overview](#overview)
 - [Objectives](#objectives)
 - [Results](#results)
+- [Assignment Requirement Mapping](#assignment-requirement-mapping)
 - [Tech Stack](#tech-stack)
 - [Architecture](#architecture)
 - [Security Assessment Scanner](#security-assessment-scanner)
@@ -22,8 +23,12 @@ Built for the Seconize Technologies DevSecOps Internship screening assignment.
   - [Logging & Monitoring](#logging-and-monitoring)
   - [Generative-AI Security](#generative-ai-security)
   - [Encryption](#encryption)
+- [Quick Start](#quick-start)
 - [Running the Scanner](#running-the-scanner)
 - [Evidence & Reports](#evidence--reports)
+- [Security Standards and References](#security-standards-and-references)
+- [Submission Evidence](#submission-evidence)
+- [Final Submission Checklist](#final-submission-checklist)
 - [Vulnerable-to-Secure Workflow](#vulnerable-to-secure-workflow)
 - [Limitations](#limitations)
 - [Author](#author)
@@ -85,6 +90,32 @@ Passed       : 14
 ```
 
 Vulnerable → Detect → Remediate → Re-assess → Secure — demonstrated with the same scanner used at every stage.
+
+## Assignment Requirement Mapping
+
+This project was developed to satisfy the requirements of the **DevSecOps Intern – AWS & AI Security Hardening** assignment.
+
+| Assignment Requirement | Implementation in This Project |
+|---|---|
+| Create an intentionally vulnerable AWS environment with at least 10 security issues | 13 baseline checks across IAM, S3, networking, secrets, and logging; 14 total checks after adding encryption |
+| Cover multiple AWS security areas | IAM, S3, Security Groups, Secrets Manager, CloudTrail, EBS encryption, and AI workload security |
+| Research AI/ML and Generative AI security risks | Documented realistic AI security risks modeled around a Generative-AI workload architecture |
+| Identify 2–3 AI-related security issues | 3 AI security checks: excessive permissions, excessive data access, missing input/output security controls |
+| Build a security assessment tool | Modular Python security scanner using `boto3` |
+| Detect traditional AWS security issues | Scanner checks IAM, S3, networking, secrets, logging, and encryption configurations |
+| Detect AI security issues | Scanner includes dedicated AI security checks |
+| Report affected resource | Each finding identifies the affected AWS resource |
+| Report issue and severity | Findings include a unique ID, security issue, and severity |
+| Report impact | Each finding explains the potential security and business impact |
+| Recommend remediation | Each finding includes recommended remediation steps |
+| Remediate identified issues | Secure configurations, IAM policies, infrastructure changes, and automation are provided |
+| Remediate AI security issues | AI workload permissions and data access are restricted; input/output security controls are modeled |
+| Validate remediation | The scanner is executed before and after remediation |
+| Demonstrate vulnerable → secure workflow | Vulnerable Environment → Detection → Remediation → Re-assessment → Secure Environment |
+| Provide before-and-after results | Baseline (13/13 fail) and final (14/14 pass) results are included in the repository |
+| Provide source code and IaC | Source code, Terraform configurations, policies, and remediation files are included |
+| Provide documentation | README and supporting documentation are included |
+| Provide evidence | Assessment reports and supporting evidence are included under `evidence/` and `reports/` |
 
 ## Tech Stack
 
@@ -231,7 +262,96 @@ The AI portion of the project models the security architecture of a cloud-hosted
 
 ---
 
+## Quick Start
+
+### Prerequisites
+
+- Python 3.9+
+- AWS CLI
+- Terraform
+- Git
+- AWS account with appropriate permissions
+
+```bash
+python --version
+aws --version
+terraform --version
+git --version
+```
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/sthuthi2002/AWS-AI-Security-Hardening-Lab.git
+cd AWS-AI-Security-Hardening-Lab
+```
+
+### 2. Configure AWS Credentials
+
+```bash
+aws configure
+aws sts get-caller-identity
+```
+
+> **Security Note:** Do not commit AWS access keys, secret keys, `.aws` credential files, or other sensitive information to the repository.
+
+### 3. Install Python Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Deploy the Vulnerable Environment
+
+```bash
+cd terraform
+terraform init
+terraform plan
+terraform apply
+cd ..
+```
+
+> ⚠️ **Warning:** This lab intentionally contains insecure configurations for security testing and educational purposes. Do not use these configurations in a production AWS environment.
+
+### 5. Run the Baseline Security Assessment
+
+```bash
+python -m scanner.scanner
+```
+
+Save or review the baseline results under `evidence/` and `reports/`.
+
+### 6. Apply Security Remediation
+
+Apply the remediation configurations and scripts under `remediation/`, covering IAM, S3, network, secrets, CloudTrail, AI workload permissions, AI data access, AI input/output controls, and encryption.
+
+### 7. Re-run the Security Assessment
+
+```bash
+python -m scanner.scanner
+```
+
+Compare results against the baseline to confirm remediation.
+
+### 8. Review the Evidence
+
+```text
+evidence/
+reports/
+docs/
+```
+
+### 9. Clean Up AWS Resources
+
+```bash
+cd terraform
+terraform destroy
+```
+
+> ⚠️ Always verify the resources Terraform plans to destroy before confirming.
+
 ## Running the Scanner
+
 
 ```bash
 # Activate the virtual environment
@@ -260,6 +380,93 @@ Passed       : 14
 | `evidence/remediation/` | Evidence collected during remediation |
 | `evidence/final/final-scan.txt` | Final scanner output (14/14 pass) |
 | `reports/final-scan.json` | Machine-readable final report — timestamp, totals, individual findings |
+
+## Security Standards and References
+
+The security checks and remediation recommendations follow recognized cloud security principles and AWS security best practices:
+
+- Applying the principle of least privilege
+- Avoiding overly permissive IAM policies
+- Restricting public access to sensitive resources
+- Enabling logging and monitoring
+- Protecting secrets and credentials
+- Encrypting sensitive data
+- Restricting network exposure
+- Implementing defense in depth
+
+**CIS AWS Foundations**
+
+| Security Area | Security Principle |
+|---|---|
+| IAM | Avoid overly permissive users, roles, and policies |
+| S3 | Prevent unnecessary public access to storage |
+| Logging | Enable audit logging and monitoring |
+| Encryption | Protect data using appropriate encryption controls |
+| Network | Restrict unnecessary access from the internet |
+
+**OWASP Cloud and Application Security** — improper access control, excessive permissions, exposure of sensitive data, improper secrets management, security misconfiguration, insufficient logging and monitoring.
+
+**AI and Generative AI Security**
+
+| AI Security Risk | Potential Impact | Security Control |
+|---|---|---|
+| Excessive IAM permissions | AI workload may access or modify unnecessary AWS resources | Apply least-privilege IAM permissions |
+| Excessive data access | Sensitive data may be exposed to the AI workload | Restrict access to required resources only |
+| Prompt injection / malicious input | AI behavior may be manipulated by untrusted input | Implement input validation and security controls |
+| Unsafe AI output | Sensitive or unsafe information may be exposed | Implement output validation and filtering |
+| Sensitive data exposure | Confidential data may be exposed through AI applications | Apply data access controls and data protection mechanisms |
+
+> **AI Scenario:** This lab models the security architecture surrounding a Generative-AI workload using AWS services. The focus is on securing the infrastructure, IAM permissions, data access, and application input/output controls associated with an AI workload. The project does not represent a production AI deployment — the AI-related scenarios are designed for security assessment and educational purposes.
+
+## Submission Evidence
+
+This repository includes evidence demonstrating the complete security hardening lifecycle:
+
+```text
+Vulnerable Environment → Baseline Assessment → Security Findings → Remediation → Re-assessment → Secure Environment
+```
+
+| Evidence | Location |
+|---|---|
+| Vulnerable environment assessment & security findings | `evidence/baseline/` |
+| Remediation evidence | `evidence/remediation/` |
+| Final assessment | `evidence/final/` |
+| Structured scanner reports | `reports/` |
+| AI security findings | `docs/` |
+| Architecture and project documentation | `README.md` |
+
+**Recommended screenshots** to include for evaluators:
+
+| Screenshot | Suggested Filename |
+|---|---|
+| Baseline scanner output (failed findings) | `evidence/baseline/baseline-scan.png` |
+| Example findings (public S3, permissive IAM role, open Security Group, exposed secrets) | `evidence/baseline/security-findings.png` |
+| Remediation process (Terraform/IAM/S3/Security Group changes) | `evidence/remediation/remediation-process.png` |
+| Final scanner output (0 failed, 14 passed) | `evidence/final/final-scan.png` |
+
+## Final Submission Checklist
+
+- [x] Source code available
+- [x] Infrastructure-as-Code included
+- [x] At least 10 AWS security issues covered (13 baseline)
+- [x] Multiple AWS security domains covered
+- [x] 2–3 AI security risks included
+- [x] AI risks include impact and remediation
+- [x] Automated security assessment tool included
+- [x] Traditional AWS security issues detected
+- [x] AI security issues detected
+- [x] Findings include severity and affected resources
+- [x] Findings include impact and remediation
+- [x] Security remediation implemented
+- [x] AI security remediation included
+- [x] Baseline assessment available (13/13 fail)
+- [x] Re-assessment available (14/14 pass)
+- [x] Before-and-after results documented
+- [x] README and design documentation included
+- [ ] Screenshots or a short demo video included
+- [x] Baseline and final assessment differences clearly explained (13 → 14 checks, encryption added)
+- [ ] AWS resources cleaned up after testing
+
 
 ## Vulnerable-to-Secure Workflow
 
