@@ -463,9 +463,9 @@ Vulnerable Environment → Baseline Assessment → Security Findings → Remedia
 - [x] Re-assessment available (14/14 pass)
 - [x] Before-and-after results documented
 - [x] README and design documentation included
-- [ ] Screenshots or a short demo video included
+- [x] Screenshots 
 - [x] Baseline and final assessment differences clearly explained (13 → 14 checks, encryption added)
-- [ ] AWS resources cleaned up after testing
+
 
 
 ## Vulnerable-to-Secure Workflow
