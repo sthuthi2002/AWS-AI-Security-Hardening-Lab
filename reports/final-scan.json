@@ -1,9 +1,9 @@
 {
-  "scan_time": "2026-09-01T07:08:35.914921+00:00",
+  "scan_timestamp": "2026-09-01T07:23:14.451534+00:00",
   "total_checks": 14,
   "failed": 0,
   "passed": 14,
-  "findings": [
+  "results": [
     {
       "id": "IAM-01",
       "status": "PASS",
