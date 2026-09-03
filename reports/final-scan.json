@@ -1,5 +1,5 @@
 {
-  "scan_timestamp": "2026-09-01T09:19:55.304116+00:00",
+  "scan_timestamp": "2026-09-03T15:55:11.791517+00:00",
   "total_checks": 14,
   "failed": 0,
   "passed": 14,
@@ -9,27 +9,27 @@
       "status": "PASS",
       "severity": "High",
       "finding": "Excessive Application Role Permissions",
-      "resource": "AI-Security-Lab-Vulnerable-Role",
+      "resource": "AI-Security-Lab-AI-Workload-Role",
       "impact": "The application role is protected from unrestricted AWS permissions.",
       "remediation": "Continue enforcing least-privilege IAM permissions.",
-      "evidence": "No unrestricted Action/Resource combination found in attached policies."
+      "evidence": "No unrestricted Action=* and Resource=* combination was found in attached policies."
     },
     {
       "id": "IAM-02",
       "status": "PASS",
       "severity": "Critical",
       "finding": "IAM Privilege Escalation Permissions",
-      "resource": "AI-Security-Lab-Vulnerable-Role",
+      "resource": "AI-Security-Lab-AI-Workload-Role",
       "impact": "The application role does not contain unrestricted or detected dangerous IAM permissions.",
       "remediation": "Continue enforcing least-privilege IAM permissions.",
-      "evidence": "No unrestricted IAM permissions detected in attached policies."
+      "evidence": "No unrestricted or detected dangerous IAM permissions were found."
     },
     {
       "id": "IAM-03",
       "status": "PASS",
       "severity": "Critical",
       "finding": "Overly Permissive Role Trust Relationship",
-      "resource": "AI-Security-Lab-Vulnerable-Role",
+      "resource": "AI-Security-Lab-AI-Workload-Role",
       "impact": "The application role can only be assumed by its intended trusted principal.",
       "remediation": "Continue restricting the trust relationship to required principals only.",
       "evidence": "Trust relationship is restricted."
@@ -69,37 +69,40 @@
       "status": "PASS",
       "severity": "High",
       "finding": "Internet-Exposed SSH",
-      "resource": "sg-032c8c60db89d1c98",
-      "impact": "SSH is not exposed to the entire IPv4 internet.",
-      "remediation": "Continue restricting administrative access to trusted sources.",
-      "evidence": "Security group sg-032c8c60db89d1c98 does not allow TCP port 22 from 0.0.0.0/0."
+      "resource": "AI-Security-Lab-Vulnerable-EC2",
+      "impact": "SSH is not exposed to the entire Internet.",
+      "remediation": "Maintain restricted administrative access.",
+      "evidence": "No TCP/22 security group rule allowing 0.0.0.0/0 was detected."
     },
     {
       "id": "NET-02",
       "status": "PASS",
-      "severity": "High",
-      "finding": "Internet-Facing Application Workload",
-      "resource": "i-0f3751859f83badca",
-      "impact": "The EC2 workload does not have a public IP address, reducing its direct internet exposure.",
-      "remediation": "Continue keeping the application workload private and avoid unnecessary public IP assignments.",
-      "evidence": "EC2 instance i-0f3751859f83badca has no public IP. Private IP: 10.0.1.148, subnet: subnet-0009be30133f2bdc4."
+      "severity": "Medium",
+      "finding": "Publicly Addressable EC2 Instance",
+      "resource": "AI-Security-Lab-Vulnerable-EC2",
+      "impact": "The EC2 workload does not have a public IPv4 address.",
+      "remediation": "Maintain private addressing for the workload.",
+      "evidence": "No public IPv4 address was detected on the lab EC2 instance."
     },
     {
       "id": "SEC-01",
       "status": "PASS",
       "severity": "High",
       "finding": "Insecure Application Credential Storage",
-      "resource": "AI-Security-Lab-Dummy-Credential",
-      "impact": "Application credentials are no longer stored directly in the application configuration. Using AWS Secrets Manager reduces the risk of credential exposure.",
-      "remediation": "Store application credentials in AWS Secrets Manager and retrieve them at runtime instead of hardcoding credential values in application configuration files.",
-      "evidence": "Application configuration uses AWS Secrets Manager secret AI-Security-Lab-Dummy-Credential."
+      "resource": "arn:aws:secretsmanager:us-east-1:256148542278:secret:AI-Security-Lab-Dummy-Credential-yyAo7d",
+      "impact": "Application credentials are stored outside the application configuration and the expected AWS Secrets Manager secret is available for runtime retrieval.",
+      "remediation": "Continue storing sensitive application credentials in AWS Secrets Manager and retrieve them at runtime.",
+      "evidence": "AWS Secrets Manager secret AI-Security-Lab-Dummy-Credential exists, is active, and no hard-coded credential patterns were detected in /home/sthuthi/AWS-AI-Security-Hardening-Lab/insecure-app-config/application.env."
     },
     {
       "id": "LOG-01",
       "status": "PASS",
       "severity": "High",
       "finding": "Weak CloudTrail Security Configuration",
-      "evidence": "Log validation and multi-region logging enabled"
+      "resource": "AI-Security-Lab-Trail",
+      "impact": "CloudTrail is configured with log validation, multi-region logging, active logging, and an S3 destination.",
+      "remediation": "Continue maintaining secure CloudTrail configuration and protected log storage.",
+      "evidence": "Log validation, multi-region logging, active logging, and S3 log delivery are enabled."
     },
     {
       "id": "AI-01",
@@ -109,7 +112,7 @@
       "resource": "AI-Security-Lab-AI-Workload-Role",
       "impact": "The AI workload is protected against unrestricted AWS permissions.",
       "remediation": "Continue enforcing least-privilege IAM permissions.",
-      "evidence": "No unrestricted Action/Resource combination found in the AI workload policies."
+      "evidence": "No attached AI workload policy contains an unrestricted Allow Action=* and Resource=* combination."
     },
     {
       "id": "AI-02",
@@ -119,14 +122,14 @@
       "resource": "ai-security-lab-data-256148542278",
       "impact": "The AI workload is restricted to the minimum required application data.",
       "remediation": "Maintain least-privilege access to arn:aws:s3:::ai-security-lab-data-256148542278/application-data.txt.",
-      "evidence": "AI workload data access is restricted to the required application resource."
+      "evidence": "No attached AI workload policy grants broad access to the application S3 bucket."
     },
     {
       "id": "AI-03",
       "status": "PASS",
       "severity": "High",
       "finding": "Missing Generative-AI Input/Output Security Controls",
-      "resource": "insecure-app-config/ai-config.json",
+      "resource": "/home/sthuthi/AWS-AI-Security-Hardening-Lab/insecure-app-config/ai-config.json",
       "impact": "The generative-AI application has configured input/output security protections.",
       "remediation": "Maintain input validation, prompt-injection detection, output validation, sensitive-data filtering, and guardrail controls.",
       "evidence": "All required generative-AI input/output security controls are enabled."
@@ -136,10 +139,10 @@
       "status": "PASS",
       "severity": "High",
       "finding": "Unencrypted EBS Volume",
-      "resource": "vol-069076c670e9b82fd",
+      "resource": "vol-019d8a90a19fafa33",
       "impact": "The workload root volume is protected using encryption at rest.",
       "remediation": "Maintain encryption for the workload's EBS storage.",
-      "evidence": "EBS volume vol-069076c670e9b82fd attached to instance i-0f3751859f83badca is encrypted."
+      "evidence": "EBS volume vol-019d8a90a19fafa33 attached to instance i-0b40a9ab7de56a616 is encrypted."
     }
   ]
 }

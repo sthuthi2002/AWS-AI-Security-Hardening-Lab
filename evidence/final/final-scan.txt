@@ -4,31 +4,58 @@ AWS SECURITY HARDENING LAB - SECURITY SCAN
 ======================================================================
 
 [PASS] IAM-01 | High | Excessive Application Role Permissions
-       Evidence: No unrestricted Action/Resource combination found in attached policies
+       Resource: AI-Security-Lab-Vulnerable-Role
+       Evidence: No unrestricted Action/Resource combination found in attached policies.
+       Impact: The application role is protected from unrestricted AWS permissions.
+       Remediation: Continue enforcing least-privilege IAM permissions.
 
 [PASS] IAM-02 | Critical | IAM Privilege Escalation Permissions
-       Evidence: No unrestricted IAM permissions detected in attached policies
+       Resource: AI-Security-Lab-Vulnerable-Role
+       Evidence: No unrestricted IAM permissions detected in attached policies.
+       Impact: The application role does not contain unrestricted or detected dangerous IAM permissions.
+       Remediation: Continue enforcing least-privilege IAM permissions.
 
 [PASS] IAM-03 | Critical | Overly Permissive Role Trust Relationship
-       Evidence: Trust relationship is restricted
+       Resource: AI-Security-Lab-Vulnerable-Role
+       Evidence: Trust relationship is restricted.
+       Impact: The application role can only be assumed by its intended trusted principal.
+       Remediation: Continue restricting the trust relationship to required principals only.
 
 [PASS] S3-01 | Critical | Public Application Data
-       Evidence: No public Allow statement detected
+       Resource: ai-security-lab-data-256148542278
+       Evidence: No public Allow statement detected for ai-security-lab-data-256148542278.
+       Impact: Application data is not publicly accessible through the bucket policy.
+       Remediation: Continue restricting bucket access to authorized principals.
 
 [PASS] S3-02 | High | Public Access Protection Disabled
-       Evidence: All four Public Access Block controls enabled
+       Resource: ai-security-lab-data-256148542278
+       Evidence: All four Public Access Block controls are enabled for ai-security-lab-data-256148542278.
+       Impact: All S3 Public Access Block controls are enabled, reducing the risk of accidental public exposure.
+       Remediation: Continue keeping all four Public Access Block controls enabled.
 
 [PASS] S3-03 | Medium | HTTPS Not Enforced
-       Evidence: Bucket policy contains aws:SecureTransport condition
+       Resource: ai-security-lab-data-256148542278
+       Evidence: Bucket policy for ai-security-lab-data-256148542278 contains an aws:SecureTransport condition.
+       Impact: S3 requests are protected against insecure non-HTTPS transport.
+       Remediation: Continue enforcing aws:SecureTransport for application bucket access.
 
 [PASS] NET-01 | High | Internet-Exposed SSH
-       Evidence: SSH is not open to the entire IPv4 internet
+       Resource: sg-032c8c60db89d1c98
+       Evidence: Security group sg-032c8c60db89d1c98 does not allow TCP port 22 from 0.0.0.0/0.
+       Impact: SSH is not exposed to the entire IPv4 internet.
+       Remediation: Continue restricting administrative access to trusted sources.
 
 [PASS] NET-02 | High | Internet-Facing Application Workload
-       Evidence: EC2 instance has no public IP
+       Resource: i-0f3751859f83badca
+       Evidence: EC2 instance i-0f3751859f83badca has no public IP. Private IP: 10.0.1.148, subnet: subnet-0009be30133f2bdc4.
+       Impact: The EC2 workload does not have a public IP address, reducing its direct internet exposure.
+       Remediation: Continue keeping the application workload private and avoid unnecessary public IP assignments.
 
 [PASS] SEC-01 | High | Insecure Application Credential Storage
-       Evidence: Application credentials are configured to use AWS Secrets Manager
+       Resource: AI-Security-Lab-Dummy-Credential
+       Evidence: Application configuration uses AWS Secrets Manager secret AI-Security-Lab-Dummy-Credential.
+       Impact: Application credentials are no longer stored directly in the application configuration. Using AWS Secrets Manager reduces the risk of credential exposure.
+       Remediation: Store application credentials in AWS Secrets Manager and retrieve them at runtime instead of hardcoding credential values in application configuration files.
 
 [PASS] LOG-01 | High | Weak CloudTrail Security Configuration
        Evidence: Log validation and multi-region logging enabled
@@ -62,3 +89,5 @@ Total checks : 14
 Failed       : 0
 Passed       : 14
 ======================================================================
+
+JSON report saved to: reports/final-scan.json
