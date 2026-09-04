@@ -1,5 +1,5 @@
 {
-  "scan_timestamp": "2026-09-03T15:55:11.791517+00:00",
+  "scan_timestamp": "2026-09-04T06:59:34.305424+00:00",
   "total_checks": 14,
   "failed": 0,
   "passed": 14,
@@ -144,5 +144,14 @@
       "remediation": "Maintain encryption for the workload's EBS storage.",
       "evidence": "EBS volume vol-019d8a90a19fafa33 attached to instance i-0b40a9ab7de56a616 is encrypted."
     }
-  ]
+  ],
+  "authentication": {
+    "mode": "cross-account",
+    "region": "us-east-1",
+    "source_account": "256148542278",
+    "source_arn": "arn:aws:iam::256148542278:user/terraform-admin",
+    "target_account": "115484988521",
+    "target_arn": "arn:aws:sts::115484988521:assumed-role/AI-Security-CrossAccount-Scanner-Role/AI-Security-Scanner",
+    "assumed_role": "arn:aws:iam::115484988521:role/AI-Security-CrossAccount-Scanner-Role"
+  }
 }

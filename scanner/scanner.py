@@ -3,6 +3,8 @@ import json
 from pathlib import Path
 from datetime import datetime, timezone
 
+from scanner.cross_account_auth import configure_aws_session
+
 from scanner.checks.iam_checks import run_iam_checks
 from scanner.checks.s3_checks import run_s3_checks
 from scanner.checks.network_checks import run_network_checks
@@ -27,7 +29,7 @@ def run_all_checks():
     return results
 
 
-def build_report(results):
+def build_report(results, auth_info=None):
     """Build a structured security assessment report."""
 
     failed = sum(
@@ -40,13 +42,66 @@ def build_report(results):
         if result.get("status") == "PASS"
     )
 
-    return {
+    report = {
         "scan_timestamp": datetime.now(timezone.utc).isoformat(),
         "total_checks": len(results),
         "failed": failed,
         "passed": passed,
         "results": results
     }
+
+    if auth_info:
+        report["authentication"] = auth_info
+
+    return report
+
+
+def print_authentication(auth_info):
+    """Print authentication information."""
+
+    print()
+    print("=" * 70)
+    print("AWS AUTHENTICATION")
+    print("=" * 70)
+
+    print(
+        f"Authentication : "
+        f"{auth_info.get('mode', 'unknown')}"
+    )
+
+    print(
+        f"Region         : "
+        f"{auth_info.get('region', 'unknown')}"
+    )
+
+    print(
+        f"Source account : "
+        f"{auth_info.get('source_account', 'unknown')}"
+    )
+
+    print(
+        f"Source identity: "
+        f"{auth_info.get('source_arn', 'unknown')}"
+    )
+
+    print(
+        f"Target account : "
+        f"{auth_info.get('target_account', 'unknown')}"
+    )
+
+    if auth_info.get("target_arn"):
+        print(
+            f"Target identity: "
+            f"{auth_info['target_arn']}"
+        )
+
+    if auth_info.get("assumed_role"):
+        print(
+            f"Assumed role   : "
+            f"{auth_info['assumed_role']}"
+        )
+
+    print("=" * 70)
 
 
 def print_report(report):
@@ -141,9 +196,23 @@ def main():
     args = parser.parse_args()
 
     try:
+        # ---------------------------------------------------------
+        # Cross-account authentication happens BEFORE any checks.
+        # ---------------------------------------------------------
+        auth_info = configure_aws_session()
+
+        print_authentication(auth_info)
+
+        # ---------------------------------------------------------
+        # Existing security checks remain unchanged.
+        # They now use the authenticated boto3 session.
+        # ---------------------------------------------------------
         results = run_all_checks()
 
-        report = build_report(results)
+        report = build_report(
+            results,
+            auth_info
+        )
 
         print_report(report)
 
@@ -164,4 +233,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
