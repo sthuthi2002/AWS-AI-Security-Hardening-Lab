@@ -40,7 +40,7 @@ def get_ec2_client():
     """
     Create an EC2 client using the current AWS credentials.
     """
-    session = boto3.Session()
+    session = boto3.DEFAULT_SESSION
     return session.client("ec2")
 
 

@@ -26,7 +26,7 @@ from scanner.resource_discovery import (
 # ============================================================
 
 def get_s3_client():
-    return boto3.Session().client("s3")
+    return boto3.DEFAULT_SESSION.client("s3")
 
 
 # ============================================================

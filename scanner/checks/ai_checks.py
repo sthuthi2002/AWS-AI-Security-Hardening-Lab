@@ -41,7 +41,7 @@ AI_CONFIG_PATH = os.path.join(
 # ============================================================
 
 def get_iam_client():
-    return boto3.Session().client("iam")
+    return boto3.DEFAULT_SESSION.client("iam")
 
 
 # ============================================================

@@ -21,7 +21,7 @@ def get_session():
     Create a boto3 session using the AWS CLI/environment
     credentials already configured on the system.
     """
-    return boto3.Session()
+    return boto3.DEFAULT_SESSION
 
 
 def get_ec2_client():

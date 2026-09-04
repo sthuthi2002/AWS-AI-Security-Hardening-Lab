@@ -25,7 +25,7 @@ from scanner.resource_discovery import discover_ai_role
 # ============================================================
 
 def get_iam_client():
-    return boto3.Session().client("iam")
+    return boto3.DEFAULT_SESSION.client("iam")
 
 
 # ============================================================

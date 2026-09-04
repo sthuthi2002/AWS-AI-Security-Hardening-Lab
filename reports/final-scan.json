@@ -1,5 +1,5 @@
 {
-  "scan_timestamp": "2026-09-04T06:59:34.305424+00:00",
+  "scan_timestamp": "2026-09-04T08:48:24.387782+00:00",
   "total_checks": 14,
   "failed": 0,
   "passed": 14,
@@ -39,30 +39,30 @@
       "status": "PASS",
       "severity": "Critical",
       "finding": "Public Application Data",
-      "resource": "ai-security-lab-data-256148542278",
+      "resource": "ai-security-lab-data-115484988521",
       "impact": "Application data is not publicly accessible through the bucket policy.",
       "remediation": "Continue restricting bucket access to authorized principals.",
-      "evidence": "No public Allow statement detected for ai-security-lab-data-256148542278."
+      "evidence": "No public Allow statement detected for ai-security-lab-data-115484988521."
     },
     {
       "id": "S3-02",
       "status": "PASS",
       "severity": "High",
       "finding": "Public Access Protection Disabled",
-      "resource": "ai-security-lab-data-256148542278",
+      "resource": "ai-security-lab-data-115484988521",
       "impact": "All S3 Public Access Block controls are enabled, reducing the risk of accidental public exposure.",
       "remediation": "Continue keeping all four Public Access Block controls enabled.",
-      "evidence": "All four Public Access Block controls are enabled for ai-security-lab-data-256148542278."
+      "evidence": "All four Public Access Block controls are enabled for ai-security-lab-data-115484988521."
     },
     {
       "id": "S3-03",
       "status": "PASS",
       "severity": "Medium",
       "finding": "HTTPS Not Enforced",
-      "resource": "ai-security-lab-data-256148542278",
+      "resource": "ai-security-lab-data-115484988521",
       "impact": "S3 requests are protected against insecure non-HTTPS transport.",
       "remediation": "Continue enforcing aws:SecureTransport for application bucket access.",
-      "evidence": "Bucket policy for ai-security-lab-data-256148542278 contains an aws:SecureTransport condition."
+      "evidence": "Bucket policy for ai-security-lab-data-115484988521 contains an aws:SecureTransport condition."
     },
     {
       "id": "NET-01",
@@ -89,7 +89,7 @@
       "status": "PASS",
       "severity": "High",
       "finding": "Insecure Application Credential Storage",
-      "resource": "arn:aws:secretsmanager:us-east-1:256148542278:secret:AI-Security-Lab-Dummy-Credential-yyAo7d",
+      "resource": "arn:aws:secretsmanager:us-east-1:115484988521:secret:AI-Security-Lab-Dummy-Credential-YfWoQr",
       "impact": "Application credentials are stored outside the application configuration and the expected AWS Secrets Manager secret is available for runtime retrieval.",
       "remediation": "Continue storing sensitive application credentials in AWS Secrets Manager and retrieve them at runtime.",
       "evidence": "AWS Secrets Manager secret AI-Security-Lab-Dummy-Credential exists, is active, and no hard-coded credential patterns were detected in /home/sthuthi/AWS-AI-Security-Hardening-Lab/insecure-app-config/application.env."
@@ -119,9 +119,9 @@
       "status": "PASS",
       "severity": "High",
       "finding": "Excessive Data Access by Generative-AI Workload",
-      "resource": "ai-security-lab-data-256148542278",
+      "resource": "ai-security-lab-data-115484988521",
       "impact": "The AI workload is restricted to the minimum required application data.",
-      "remediation": "Maintain least-privilege access to arn:aws:s3:::ai-security-lab-data-256148542278/application-data.txt.",
+      "remediation": "Maintain least-privilege access to arn:aws:s3:::ai-security-lab-data-115484988521/application-data.txt.",
       "evidence": "No attached AI workload policy grants broad access to the application S3 bucket."
     },
     {
@@ -139,10 +139,10 @@
       "status": "PASS",
       "severity": "High",
       "finding": "Unencrypted EBS Volume",
-      "resource": "vol-019d8a90a19fafa33",
+      "resource": "vol-070dd831f0b8f8c91",
       "impact": "The workload root volume is protected using encryption at rest.",
       "remediation": "Maintain encryption for the workload's EBS storage.",
-      "evidence": "EBS volume vol-019d8a90a19fafa33 attached to instance i-0b40a9ab7de56a616 is encrypted."
+      "evidence": "EBS volume vol-070dd831f0b8f8c91 attached to instance i-0e84f5c3566a5c3de is encrypted."
     }
   ],
   "authentication": {

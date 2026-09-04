@@ -34,7 +34,7 @@ SECRET_NAME = "AI-Security-Lab-Dummy-Credential"
 # ============================================================
 
 def get_secretsmanager_client():
-    return boto3.Session().client(
+    return boto3.DEFAULT_SESSION.client(
         "secretsmanager"
     )
 

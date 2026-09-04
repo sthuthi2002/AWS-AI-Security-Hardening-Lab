@@ -1,0 +1,112 @@
+Authenticating using cross-account STS AssumeRole...
+Source account : 256148542278
+Source identity: arn:aws:iam::256148542278:user/terraform-admin
+Target role    : arn:aws:iam::115484988521:role/AI-Security-CrossAccount-Scanner-Role
+
+======================================================================
+AWS AUTHENTICATION
+======================================================================
+Authentication : cross-account
+Region         : us-east-1
+Source account : 256148542278
+Source identity: arn:aws:iam::256148542278:user/terraform-admin
+Target account : 115484988521
+Target identity: arn:aws:sts::115484988521:assumed-role/AI-Security-CrossAccount-Scanner-Role/AI-Security-Scanner
+Assumed role   : arn:aws:iam::115484988521:role/AI-Security-CrossAccount-Scanner-Role
+======================================================================
+
+======================================================================
+AWS SECURITY HARDENING LAB - SECURITY SCAN
+======================================================================
+
+[FAIL] IAM-01 | High | Excessive Application Role Permissions
+       Resource: AI-Security-Lab-AI-Workload-Role
+       Evidence: Attached policy AI-Security-Lab-AI-Workload-Vulnerable-Policy contains an Allow statement with Action=* and Resource=*.
+       Impact: The application role can potentially perform unrestricted AWS actions against unrestricted resources, increasing the blast radius of a compromise.
+       Remediation: Apply least-privilege IAM permissions and allow only the AWS actions and resources required by the application.
+
+[FAIL] IAM-02 | Critical | IAM Privilege Escalation Permissions
+       Resource: AI-Security-Lab-AI-Workload-Role
+       Evidence: Attached policy AI-Security-Lab-AI-Workload-Vulnerable-Policy contains an Allow statement with unrestricted Action=*.
+       Impact: Unrestricted permissions could allow a compromised application identity to modify IAM resources or perform privileged AWS operations.
+       Remediation: Remove unrestricted IAM permissions and grant only the minimum actions required by the application.
+
+[PASS] IAM-03 | Critical | Overly Permissive Role Trust Relationship
+       Resource: AI-Security-Lab-AI-Workload-Role
+       Evidence: Trust relationship is restricted.
+       Impact: The application role can only be assumed by its intended trusted principal.
+       Remediation: Continue restricting the trust relationship to required principals only.
+
+[FAIL] S3-01 | Critical | Public Application Data
+       Resource: ai-security-lab-data-115484988521
+       Evidence: Bucket ai-security-lab-data-115484988521 contains an Allow statement that grants public object access.
+       Impact: Unauthenticated or publicly accessible users could retrieve application data from the S3 bucket.
+       Remediation: Remove public Allow permissions and restrict bucket access to authorized AWS principals.
+
+[FAIL] S3-02 | High | Public Access Protection Disabled
+       Resource: ai-security-lab-data-115484988521
+       Evidence: S3 Public Access Block configuration for ai-security-lab-data-115484988521: {'BlockPublicAcls': False, 'IgnorePublicAcls': False, 'BlockPublicPolicy': False, 'RestrictPublicBuckets': False}
+       Impact: One or more S3 Public Access Block controls are disabled, increasing the chance of unintended public bucket or object exposure.
+       Remediation: Enable all four Public Access Block controls.
+
+[FAIL] S3-03 | Medium | HTTPS Not Enforced
+       Resource: ai-security-lab-data-115484988521
+       Evidence: No aws:SecureTransport condition found in the policy for ai-security-lab-data-115484988521.
+       Impact: The bucket policy does not explicitly enforce secure HTTPS transport for requests.
+       Remediation: Add a Deny statement using aws:SecureTransport=false to reject insecure requests.
+
+[ERROR] NET-01 | High | Internet-Exposed SSH
+       Resource: N/A
+       Evidence: No matching lab EC2 instance was found.
+       Impact: The lab EC2 instance could not be discovered, so its security group configuration could not be verified.
+       Remediation: Verify that the lab EC2 instance exists and has the Name tag 'AI-Security-Lab-Vulnerable-EC2'.
+
+[ERROR] NET-02 | Medium | Publicly Addressable EC2 Instance
+       Resource: N/A
+       Evidence: No matching lab EC2 instance was found.
+       Impact: The lab EC2 instance could not be discovered, so its public IP configuration could not be verified.
+       Remediation: Verify that the lab EC2 instance exists and has the Name tag 'AI-Security-Lab-Vulnerable-EC2'.
+
+[FAIL] SEC-01 | High | Insecure Application Credential Storage
+       Resource: AI-Security-Lab-Dummy-Credential
+       Evidence: AWS Secrets Manager secret AI-Security-Lab-Dummy-Credential was not found.
+       Impact: The expected application credential secret does not exist in AWS Secrets Manager.
+       Remediation: Create the application credential in AWS Secrets Manager and retrieve it at runtime instead of storing it in application configuration.
+
+[FAIL] LOG-01 | High | Weak CloudTrail Security Configuration
+       Resource: CloudTrail
+       Evidence: No CloudTrail trail was found.
+       Impact: No CloudTrail trail was discovered, reducing the ability to audit AWS activity.
+       Remediation: Create and configure a CloudTrail trail with multi-region logging, log file validation, and an S3 destination.
+
+[FAIL] AI-01 | Critical | Excessive Permissions for Generative-AI Workload
+       Resource: AI-Security-Lab-AI-Workload-Role
+       Evidence: Attached policy AI-Security-Lab-AI-Workload-Vulnerable-Policy contains Effect=Allow, Action=* and Resource=*.
+       Impact: A compromised AI application could potentially perform arbitrary AWS API actions.
+       Remediation: Replace wildcard permissions with only the AWS actions and resources required by the AI application.
+
+[PASS] AI-02 | High | Excessive Data Access by Generative-AI Workload
+       Resource: ai-security-lab-data-115484988521
+       Evidence: No attached AI workload policy grants broad access to the application S3 bucket.
+       Impact: The AI workload is restricted to the minimum required application data.
+       Remediation: Maintain least-privilege access to arn:aws:s3:::ai-security-lab-data-115484988521/application-data.txt.
+
+[PASS] AI-03 | High | Missing Generative-AI Input/Output Security Controls
+       Resource: /home/sthuthi/AWS-AI-Security-Hardening-Lab/insecure-app-config/ai-config.json
+       Evidence: All required generative-AI input/output security controls are enabled.
+       Impact: The generative-AI application has configured input/output security protections.
+       Remediation: Maintain input validation, prompt-injection detection, output validation, sensitive-data filtering, and guardrail controls.
+
+[ERROR] ENC-01 | High | Unencrypted EBS Volume
+       Resource: N/A
+       Evidence: No matching lab EC2 instance was found.
+       Impact: The lab EC2 instance could not be discovered, so its root EBS volume could not be verified.
+       Remediation: Verify that the lab EC2 instance exists and has the Name tag 'AI-Security-Lab-Vulnerable-EC2'.
+
+======================================================================
+Total checks : 14
+Failed       : 8
+Passed       : 3
+======================================================================
+
+JSON report saved to: reports/final-scan.json

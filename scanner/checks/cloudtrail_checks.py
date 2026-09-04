@@ -6,7 +6,7 @@ import boto3
 # ============================================================
 
 def get_cloudtrail_client():
-    return boto3.Session().client("cloudtrail")
+    return boto3.DEFAULT_SESSION.client("cloudtrail")
 
 
 # ============================================================
