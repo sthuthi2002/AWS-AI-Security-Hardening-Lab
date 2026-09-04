@@ -36,6 +36,7 @@ assignment.**
 -   [Security Standards and
     References](#security-standards-and-references)
 -   [Cross-Platform Support](#cross-platform-support)
+-   [Cross-Account Scanning](#cross-account-scanning)
 -   [Final Submission Checklist](#final-submission-checklist)
 -   [Limitations](#limitations)
 -   [Author](#author)
@@ -907,6 +908,84 @@ Relevant security guidance includes:
 -   OWASP guidance for Generative-AI application security
 -   NIST Cybersecurity Framework concepts
 -   CIS AWS Foundations security principles
+
+------------------------------------------------------------------------
+
+# Cross-Account Scanning
+
+The scanner supports secure cross-account assessment using AWS STS `AssumeRole`. A source AWS identity authenticates in one account and temporarily assumes a dedicated scanner role in the target account without storing target-account access keys.
+
+### Cross-Account Flow
+
+```text
+Source AWS Account
+(terraform-admin)
+        |
+        | STS AssumeRole
+        v
+Target AWS Account
+AI-Security-CrossAccount-Scanner-Role
+        |
+        v
+Boto3 DEFAULT_SESSION
+        |
+        v
+AWS Resource Discovery + Security Checks
+        |
+        v
+14 PASS / 0 FAIL
+```
+
+### Implementation Files
+
+- `scanner/cross_account_auth.py` — handles STS `AssumeRole`, validates source/target identity, and configures temporary Boto3 credentials.
+- `scanner/scanner.py` — invokes authentication before running checks and records authentication metadata in the report.
+- `scanner/resource_discovery.py` — discovers resources through the active authenticated Boto3 session.
+- `scanner/checks/ai_checks.py`
+- `scanner/checks/iam_checks.py`
+- `scanner/checks/encryption_checks.py`
+- `scanner/checks/network_checks.py`
+- `scanner/checks/cloudtrail_checks.py`
+- `scanner/checks/secrets_checks.py`
+- `scanner/checks/s3_checks.py`
+
+The service check modules use `boto3.DEFAULT_SESSION` so all checks operate against the same authenticated account/session established by the cross-account authentication layer.
+
+### Configuration
+
+Cross-account scanning is configured through environment variables. Example:
+
+```env
+AWS_REGION=us-east-1
+CROSS_ACCOUNT_ENABLED=true
+CROSS_ACCOUNT_ROLE_ARN=arn:aws:iam::<TARGET_ACCOUNT_ID>:role/AI-Security-CrossAccount-Scanner-Role
+ROLE_SESSION_NAME=AI-Security-Scanner
+ROLE_DURATION_SECONDS=3600
+```
+
+Replace `<TARGET_ACCOUNT_ID>` with the actual target account ID. Do not type the placeholder literally. Never commit AWS credentials or temporary credential files.
+
+### Security Properties
+
+- Uses temporary STS credentials rather than storing target-account access keys.
+- Target-role trust is restricted to the intended source identity.
+- Scanner permissions are limited to read-oriented discovery and assessment actions.
+- The same scanner code can assess resources in the target account after authentication.
+- Authentication details are recorded in the final report for auditability.
+
+### Verified Cross-Account Result
+
+The implementation was validated by authenticating from the source account into the target account and executing the complete security assessment:
+
+```text
+Authentication : cross-account
+Target account : 115484988521
+Total checks   : 14
+Failed         : 0
+Passed         : 14
+```
+
+This confirms that the scanner authenticated to the target account and evaluated the target resources using the assumed role.
 
 ------------------------------------------------------------------------
 
